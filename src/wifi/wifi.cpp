@@ -25,23 +25,23 @@ void createWiFiAP() {
 
 // 初始化连接WiFi
 void initConnectWiFi() {
-  if (strlen(wifiConfig.ssid) > 0 && strlen(wifiConfig.password) > 0) {
-    WiFi.begin(wifiConfig.ssid, wifiConfig.password);
+  if (strlen(config.ssid) > 0 && strlen(config.password) > 0) {
+    WiFi.begin(config.ssid, config.password);
   }
 }
 
 // 更新WiFi连接状态
 void updateConnectWifi() {
-  if (strlen(wifiConfig.ssid) > 0 && strlen(wifiConfig.password) > 0) {
+  if (strlen(config.ssid) > 0 && strlen(config.password) > 0) {
     unsigned long startTime = millis();
     const unsigned long timeout = 60000;
 
-    WiFi.begin(wifiConfig.ssid, wifiConfig.password);
+    WiFi.begin(config.ssid, config.password);
     Serial.println(String(" updateConnectWifi 连接WiFi ") + WiFi.status() + ":");
     Serial.print("SSID: ");
-    Serial.println(wifiConfig.ssid);
+    Serial.println(config.ssid);
     Serial.print("Password: ");
-    Serial.println(wifiConfig.password);
+    Serial.println(config.password);
 
     if (WiFi.status() == WL_CONNECTED) {
       Serial.println("连接到 WiFi");

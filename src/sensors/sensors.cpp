@@ -33,10 +33,10 @@ float readSoilMoisture() {
 void updateDeviceStates() {
   if (!config.manualMode) {
     if (temperature <= config.tempThreshold) {
-      digitalWrite(FAN_PIN, LOW);
+      digitalWrite(FAN_PIN, LOW); // 风扇关闭
       fanState = false;
     } else {
-      digitalWrite(FAN_PIN, HIGH);
+      digitalWrite(FAN_PIN, HIGH); // 风扇开启
       fanState = true;
     }
 

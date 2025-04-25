@@ -11,7 +11,6 @@ void setup()
 {
   Serial.begin(115200);
   initEEPROM();
-  initWiFiConfig();
   sensors.begin();
   pinMode(FAN_PIN, OUTPUT);
   pinMode(PUMP_PIN, OUTPUT);
@@ -34,10 +33,6 @@ void loop()
   {
     updateConnectWifi();
     Serial.println(String("连接 loop WiFi ") + WiFi.status() + ":");
-    Serial.print("loop SSID: ");
-    Serial.println(wifiConfig.ssid);
-    Serial.print("loop Password: ");
-    Serial.println(wifiConfig.password);
   }
   else 
   {
@@ -46,6 +41,16 @@ void loop()
     Serial.println(String(temperature).c_str());
     Serial.print("湿度: ");
     Serial.println(String(soilMoisture).c_str());
+    Serial.print("loop SSID: ");
+    Serial.println(config.ssid);
+    Serial.print("loop Password: ");
+    Serial.println(config.password);
+    Serial.print("loop manualMode: ");
+    Serial.println(config.manualMode);
+    Serial.print("loop tempThreshold: ");
+    Serial.println(config.tempThreshold);
+    Serial.print("loop soilMoistureThreshold: ");
+    Serial.println(config.soilMoistureThreshold);
 
 
     // if (!mqttClient.connected()) {
