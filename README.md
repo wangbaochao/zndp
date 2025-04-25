@@ -15,7 +15,7 @@ Arduino
 
 ### 硬件说明：
 
-ESP32-S3-DevKitC-1（WROOM N16R8）+ 0.91寸  128x32 I2C(IIC) 液晶显示屏 + DS18B20温度传感器 + 
+ESP32-S3-DevKitC-1（WROOM N16R8）+ 0.91寸  128x32 I2C(IIC) 液晶显示屏 + DS18B20温度传感器 + YL-69 土壤湿度传感器
 
 ![输入图片说明](https://foruda.gitee.com/images/1745587154553313239/734cc45b_1766310.jpeg "微信图片_20250425211853.jpg")
 
