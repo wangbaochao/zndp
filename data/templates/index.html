@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>温室环境控制系统</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0px;
+            display: flex;
+            justify-content: center;
+            align-items: center; /* 修改为左对齐 */
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        p {
+            font-size: 18px;
+            color: #555;
+        }
+
+        .yuzhi {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* 修改为左对齐 */
+        }
+
+        input[type='number'], input[type='submit'] {
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        input[type='submit'] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type='submit']:hover {
+            background-color: #45a049;
+        }
+
+        a {
+            color: #1e90ff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+        }
+
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+<h1>温室环境控制系统(<span id="version"></span>)</h1>
+
+</form>
+<p>温&nbsp;&nbsp;度: <span id="temperature"></span> °C</p>
+<p>土壤湿度: <span id="soilMoisture"></span> %</p>
+<!-- <p>风&nbsp;&nbsp;扇: <span id="fanState"></span></p>
+<p>水&nbsp;&nbsp;泵: <span id="pumpState"></span></p>
+<p>电&nbsp;&nbsp;灯: <span id="lightState"></span></p> -->
+<p>WiFi状态: <span id="wifiState"></span></p>
+<p>cpu状态: <span id="cpu"></span></p>
+<p>内存状态: <span id="memory"></span></p>
+<div>
+  风扇:
+  <label class="switch">
+      <input type="checkbox" id="fanState" name="fanState" value=''>
+      <span class="slider round"></span>
+  </label>
+</div>
+<div>
+  水泵:
+  <label class="switch">
+      <input type="checkbox" id="pumpState" name="pumpState" value=''>
+      <span class="slider round"></span>
+  </label>
+</div>
+<div>
+  电&nbsp;&nbsp;灯:
+  <label class="switch">
+      <input type="checkbox" id="lightState" name="lightState" value=''>
+      <span class="slider round"></span>
+  </label>
+  </label>
+</div>
+<div>
+  <div>
+    手动模式:
+    <label  id="toggleModeForm" class="switch">
+        <input type="checkbox" id="manualMode" name="manualMode" value=''>
+        <span class="slider round"></span>
+    </label>
+  </div>
+</form>
+
+
+
+
+<form id="yuzhiForm" class="yuzhi" action='/set' method='POST'>
+    温度阈值: <input type='number' id="tempThreshold" name='tempThreshold' value=''><br>
+    湿度阈值: <input type='number' id="soilMoistureThreshold" name='soilMoistureThreshold' value=''><br>
+    <input type='submit' value='保存阈值'>
+</form>
+<form id="setPinForm" class="yuzhi" action='/setPin' method='POST'>
+    温度传感器引脚: <input type='number' id="tempPin" name='tempPin' value=''><br>
+    土壤湿度传感器引脚: <input type='number' id="soilMoisturePin" name='soilMoisturePin' value=''><br>
+    <input type='submit' value='保存引脚'>
+</form>
+<!-- <form id="soilMoisturePinForm" class="yuzhi" action='/setSoilMoisturePin' method='POST'>
+    
+    <input type='submit' value='保存'>
+</form> -->
+<a href='/wifiConfig'>设置 WiFi</a>
+</body>
+<script type="text/javascript">
+    async function fetchData() {
+        try {
+            const response = await fetch('/api/data');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+
+            const wifiStateMap = {
+                "Connected": "已连接",
+                "Disconnected": "未连接"
+            };
+            const wifiStateChinese = wifiStateMap[data.wifiState] || data.wifiState; // 如果未知状态，保持原值
+            document.getElementById('version').textContent = data.version;
+
+            document.getElementById('temperature').textContent = data.temperature;
+            document.getElementById('soilMoisture').textContent = data.soilMoisture;
+
+           
+
+            document.getElementById('wifiState').textContent = wifiStateChinese;
+            // 设置阈值
+            document.getElementById('tempThreshold').value = data.tempThreshold;
+            document.getElementById('soilMoistureThreshold').value = data.soilMoistureThreshold;
+            // 设置引脚值
+            document.getElementById('tempPin').value = data.tempPin;
+            document.getElementById('soilMoisturePin').value = data.soilMoisturePin;
+
+            // 设置开关状态
+            document.getElementById('fanState').checked = data.fanState;
+            document.getElementById('pumpState').checked = data.pumpState;
+            document.getElementById('lightState').checked = data.lightState;
+            document.getElementById('manualMode').checked = data.manualMode;
+            document.getElementById('memory').textContent = Math.round((data.totalHeap - data.memory)/data.totalHeap * 100) + '%';  
+           // document.getElementById('cpu').textContent = data.cpu;
+            
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
+    
+    function submitForm(form,formId) {
+      const payload = new URLSearchParams({
+        modeType: formId,
+        [formId]:document.getElementById(formId).checked // 动态添加键值对
+      });
+        fetch("/toggleMode", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: payload
+        })
+            .then(response => response.json()) // 解析响应为 JSON
+            .then(data => {
+                console.log('操作成功:', data);
+                if (data.code === 200) {
+                    // 如果操作成功，更新 UI
+                    fetchData();
+                }
+            })
+            .catch(error => {
+                console.error('操作失败:', error);
+            });
+    }
+
+  // 定义表单的 id 列表
+    const formIds = ['fanState', 'pumpState', 'lightState', 'manualMode'];
+
+    // 遍历表单 id 列表，为每个表单添加 change 事件监听器
+    for (const formId of formIds) {
+        document.getElementById(formId).addEventListener('change', function (event) {
+            console.log('提交表单');  
+            event.preventDefault(); // 阻止默认行为
+            submitForm(this,formId); // 提交表单
+        });
+    }
+
+    document.getElementById('toggleModeForm').addEventListener('change', function (event) {
+        console.log('提交表单');
+        event.preventDefault(); // 阻止表单默认提交行为
+        fetch('/toggleMode', {
+          method: 'POST',
+          headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: new URLSearchParams(new FormData(this)) // 将表单数据转换为查询字符串
+        }) // 发送 POST 请求
+            .then(response => response.json()) // 解析响应为 JSON
+            .then(data => {
+                console.log('切换模式成功:', data);
+                if (data.code === 200) {
+                    // 如果切换模式成功，更新 UI
+                    fetchData();
+                }
+            })
+            .catch(error => {
+                console.error('切换模式失败:', error);
+            });
+    });
+    document.getElementById('yuzhiForm').addEventListener('submit', function (event) {
+        console.log('提交表单');
+        event.preventDefault();
+        fetch('/set', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams(new FormData(this)) // 将表单数据转换为查询字符串
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('保存阈值成功:', data);
+                if (data.code === 200) {
+                    // 如果保存阈值成功，更新 UI
+                    fetchData();
+                }
+            })
+    });
+    document.getElementById('setPinForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        fetch('/setPin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams(new FormData(this)) // 将表单数据转换为查询字符串
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('保存引脚配置成功:', data);
+                if (data.code === 200) {
+                    // 如果保存成功，更新 UI
+                    fetchData();
+                }
+            })
+            .catch(error => {
+                console.error('保存引脚配置失败:', error);
+            });
+    });
+ 
+    setInterval(fetchData, 5000);
+
+    fetchData();
+
+</script>
+</html>

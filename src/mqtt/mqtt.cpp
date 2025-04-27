@@ -3,6 +3,7 @@
 //#include "wifi/wifi.h"
 #include "sensors/sensors.h"
 #include "mqtt.h"
+#include "config/config.h"
 
 // MQTT配置
 const char *mqtt_server = "mqtt.eclipseprojects.io";
@@ -18,27 +19,27 @@ void mqttCallback(char *topic, byte *payload, unsigned int length) {
 
   if (String(topic) == "dht/fan") {
     if (message == "ON") {
-      digitalWrite(FAN_PIN, HIGH);
-      fanState = true;
+      digitalWrite(config.fanPin, HIGH);
+      config.fanState = true;
     } else if (message == "OFF") {
-      digitalWrite(FAN_PIN, LOW);
-      fanState = false;
+      digitalWrite(config.fanPin, LOW);
+      config.fanState = false;
     }
   } else if (String(topic) == "dht/pump") {
     if (message == "ON") {
-      digitalWrite(PUMP_PIN, HIGH);
-      pumpState = true;
+      digitalWrite(config.pumpPin, HIGH);
+      config.pumpState = true;
     } else if (message == "OFF") {
-      digitalWrite(PUMP_PIN, LOW);
-      pumpState = false;
+      digitalWrite(config.pumpPin, LOW);
+      config.pumpState = false;
     }
   } else if (String(topic) == "dht/light") {
     if (message == "ON") {
-      digitalWrite(LIGHT_PIN, HIGH);
-      lightState = true;
+      digitalWrite(config.lightPin, HIGH);
+      config.lightState = true;
     } else if (message == "OFF") {
-      digitalWrite(LIGHT_PIN, LOW);
-      lightState = false;
+      digitalWrite(config.lightPin, LOW);
+      config.lightState = false;
     }
   }
 }
