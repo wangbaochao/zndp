@@ -60,7 +60,7 @@ void handleJsonRequest(AsyncWebServerRequest *request)
 void handleSuccess(AsyncWebServerRequest *request)
 {
   // 创建一个 JSON 对象
-  JsonDocument jsonDoc; // 根据实际需求调整缓冲区大小
+  JsonDocument jsonDoc;
   jsonDoc["code"] = 200;
   jsonDoc["msg"] = "成功";
   // 将 JSON 对象转换为字符串
@@ -74,7 +74,7 @@ void handleSuccess(AsyncWebServerRequest *request)
 void handleError(AsyncWebServerRequest *request, int code = 500, const char *msg = "操作失败")
 {
   // 创建一个 JSON 对象
-  JsonDocument jsonDoc; // 根据实际需求调整缓冲区大小
+  JsonDocument jsonDoc;
   jsonDoc["code"] = code;
   jsonDoc["msg"] = msg;
   // 将 JSON 对象转换为字符串
@@ -116,7 +116,7 @@ enum class ModeType {
   UNKNOWN // 用于处理未知模式
 };
 
-// 辅助函数：将字符串转换为枚举值
+// 将字符串转换为枚举值
 ModeType stringToModeType(const String &modeStr) {
   if (modeStr == "manualMode") return ModeType::MANUAL_MODE;
   if (modeStr == "fanState") return ModeType::FAN_STATE;
@@ -127,9 +127,6 @@ ModeType stringToModeType(const String &modeStr) {
 
 // 跳转
 // request->redirect("/");
- 
-
-
 void handleToggleMode(AsyncWebServerRequest *request)
 {
   // Serial.print("server.cpp handleToggleMode: ");
@@ -181,19 +178,19 @@ void handleWiFiConfig(AsyncWebServerRequest *request)
     bool hasPassword = request->hasParam("password", true);
 
     // 打印所有参数用于调试
-    int paramsCount = request->params();
-    for (int i = 0; i < paramsCount; i++)
-    {
-      const AsyncWebParameter *p = request->getParam(i);
-      if (p->isPost())
-      {
-        // Serial.printf("POST[%s]: %s\n", p->name().c_str(), p->value().c_str());
-      }
-      else
-      {
-        // Serial.printf("GET[%s]: %s\n", p->name().c_str(), p->value().c_str());
-      }
-    }
+    // int paramsCount = request->params();
+    // for (int i = 0; i < paramsCount; i++)
+    // {
+    //   const AsyncWebParameter *p = request->getParam(i);
+    //   if (p->isPost())
+    //   {
+    //     // Serial.printf("POST[%s]: %s\n", p->name().c_str(), p->value().c_str());
+    //   }
+    //   else
+    //   {
+    //     // Serial.printf("GET[%s]: %s\n", p->name().c_str(), p->value().c_str());
+    //   }
+    // }
 
     if (hasSsid && hasPassword)
     {
@@ -297,7 +294,7 @@ void initWebServer()
   if (!SPIFFS.begin(true))
   {
     // Serial.println("An Error has occurred while mounting SPIFFS");
-    return;
+    // return;
   }
   else
   {

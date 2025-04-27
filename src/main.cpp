@@ -41,11 +41,11 @@ void loop()
   if (freeHeap < 1000) { // 如果可用内存小于1000字节
     Serial.println("内存不足，尝试释放资源...");
     // 释放不再使用的资源
-    // 例如：关闭WiFi连接、停止MQTT客户端等
+    // 关闭WiFi连接、停止MQTT客户端等
     WiFi.disconnect(true);
     // mqttClient.disconnect();
 
-    // 如果内存仍然不足，可以考虑重启系统
+    // 内存仍然不足，可以考虑重启系统
     if (heap_caps_get_free_size(MALLOC_CAP_8BIT) < 500) {
       Serial.println("内存严重不足，重启系统...");
       ESP.restart();
