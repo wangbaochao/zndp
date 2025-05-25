@@ -3,6 +3,13 @@
 #### 介绍
 闲着无聊给老爸的蔬菜大棚添点科技，刚刚开搞后期会慢慢完善
 
+
+#### 开源地址
+
+[gitee](https://gitee.com/wangbaochao/zndp)
+[github](https://github.com/wangbaochao/zndp)
+
+
 #### 软件架构
 Arduino
 
