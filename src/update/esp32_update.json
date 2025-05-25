@@ -1,0 +1,6 @@
+{
+    "version": "v1.0.9",
+    "firmwareUrl": "http://192.168.0.108:9000/update/zndp/firmware.bin",
+    "firmwareHtmlVersion": "v1.0.8",
+    "firmwareHtml": "http://192.168.0.108:9000/update/zndp/index.html"
+}

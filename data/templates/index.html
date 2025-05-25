@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>温室环境控制系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -10,9 +11,8 @@
             padding: 0px;
             display: flex;
             justify-content: center;
-            align-items: center; /* 修改为左对齐 */
+            align-items: center;
             flex-direction: column;
-            height: 100vh;
         }
 
         h1 {
@@ -28,10 +28,10 @@
             margin-top: 20px;
             display: flex;
             flex-direction: column;
-            align-items: flex-start; /* 修改为左对齐 */
+            align-items: flex-start;
         }
 
-        input[type='number'], input[type='submit'] {
+        input[type='number'], input[type='submit'],input[type='text'] {
             padding: 10px;
             font-size: 16px;
             margin-top: 10px;
@@ -45,6 +45,23 @@
         }
 
         input[type='submit']:hover {
+            background-color: #45a049;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin: 5px 5px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            width: 100px;
+            height: 30px;
+        }
+
+        button:hover {
             background-color: #45a049;
         }
 
@@ -107,72 +124,187 @@
         .slider.round:before {
             border-radius: 50%;
         }
+
+        .aircon-control {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+                align-items: center;
+            }
+
+            h1 {
+                font-size: 12px;
+            }
+
+            p {
+                font-size: 20px;
+                font-weight: bold;
+            }
+
+            .yuzhi {
+                width: 100%;
+            }
+
+            input[type='number'], input[type='submit'], input[type='text'] {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            button {
+                width: 100%;
+                margin: 5px 0;
+            }
+
+            .switch {
+                width: 50px;
+                height: 28px;
+                margin: 10px;
+            }
+
+            .slider:before {
+                height: 20px;
+                width: 20px;
+            }
+
+            input:checked + .slider:before {
+                transform: translateX(22px);
+            }
+
+            .aircon-control {
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                text-align: center;
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
-<h1>温室环境控制系统(<span id="version"></span>)</h1>
+  <h2>温室环境控制系统(<span id="version"></span>)</h2>
+<div class="aircon-control">
+ 
+  <p>温&nbsp;&nbsp;度: <span id="temperature"></span> °C</p>
+  <p>土壤湿度: <span id="soilMoisture"></span> %</p>
+  <p>空气温度: <span id="dht11Temperature"></span> °C</p>
+  <p>空气湿度: <span id="dht11SoilMoisture"></span> %</p>
+  <!-- <p>cpu状态: <span id="cpu"></span></p> -->
+  <p>内存状态: <span id="memory"></span></p>
+  <p>WiFi状态: <span id="wifiState"></span></p>
+  <p>mqtt状态: <span id="mqttState"></span></p>
+  
+  <p>亮度:  <input type="range" id="contrast" min="0" max="255" value="255" onchange="changeContrast()">  </p>
 
-</form>
-<p>温&nbsp;&nbsp;度: <span id="temperature"></span> °C</p>
-<p>土壤湿度: <span id="soilMoisture"></span> %</p>
-<!-- <p>风&nbsp;&nbsp;扇: <span id="fanState"></span></p>
-<p>水&nbsp;&nbsp;泵: <span id="pumpState"></span></p>
-<p>电&nbsp;&nbsp;灯: <span id="lightState"></span></p> -->
-<p>WiFi状态: <span id="wifiState"></span></p>
-<p>cpu状态: <span id="cpu"></span></p>
-<p>内存状态: <span id="memory"></span></p>
-<div>
-  风扇:
-  <label class="switch">
-      <input type="checkbox" id="fanState" name="fanState" value=''>
-      <span class="slider round"></span>
-  </label>
-</div>
-<div>
-  水泵:
-  <label class="switch">
-      <input type="checkbox" id="pumpState" name="pumpState" value=''>
-      <span class="slider round"></span>
-  </label>
-</div>
-<div>
-  电&nbsp;&nbsp;灯:
-  <label class="switch">
-      <input type="checkbox" id="lightState" name="lightState" value=''>
-      <span class="slider round"></span>
-  </label>
-  </label>
-</div>
-<div>
   <div>
-    手动模式:
-    <label  id="toggleModeForm" class="switch">
-        <input type="checkbox" id="manualMode" name="manualMode" value=''>
+    风扇:
+    <label class="switch">
+        <input type="checkbox" id="fanState" name="fanState" value=''>
         <span class="slider round"></span>
     </label>
   </div>
-</form>
+  <div>
+    水泵:
+    <label class="switch">
+        <input type="checkbox" id="pumpState" name="pumpState" value=''>
+        <span class="slider round"></span>
+    </label>
+  </div>
+  <div>
+    灯光: 
+    <label class="switch">
+        <input type="checkbox" id="lightState" name="lightState" value=''>
+        <span class="slider round"></span>
+    </label>
+    </label>
+  </div>
+  <div>
+    <div>
+      手动:
+      <label  id="toggleModeForm" class="switch">
+          <input type="checkbox" id="manualMode" name="manualMode" value=''>
+          <span class="slider round"></span>
+      </label>
+    </div>
+  </div>
+</div>
 
+<button  onclick="systemOperation('reboot')">重启</button>
+<button onclick="systemOperation('update')">检查更新</button>
 
+<a onclick="showOrhide()">设置参数</a>
+<a href='/wifiConfig'>设置 WiFi</a>
 
-
-<form id="yuzhiForm" class="yuzhi" action='/set' method='POST'>
+<div id="canshu" style="display: none;">
+  <form id="yuzhiForm" class="yuzhi" action='/set' method='POST'>
     温度阈值: <input type='number' id="tempThreshold" name='tempThreshold' value=''><br>
     湿度阈值: <input type='number' id="soilMoistureThreshold" name='soilMoistureThreshold' value=''><br>
     <input type='submit' value='保存阈值'>
 </form>
 <form id="setPinForm" class="yuzhi" action='/setPin' method='POST'>
+    dh11传感器引脚: <input type='number' id="dhtPin" name='dhtPin' value=''><br>
     温度传感器引脚: <input type='number' id="tempPin" name='tempPin' value=''><br>
     土壤湿度传感器引脚: <input type='number' id="soilMoisturePin" name='soilMoisturePin' value=''><br>
+    风扇继电器引脚: <input type='number' id="fanPin" name='fanPin' value=''><br>
+    水泵继电器引脚: <input type='number' id="pumpPin" name='pumpPin' value=''><br>
+    灯光继电器引脚: <input type='number' id="lightPin" name='lightPin' value=''><br>
     <input type='submit' value='保存引脚'>
 </form>
-<!-- <form id="soilMoisturePinForm" class="yuzhi" action='/setSoilMoisturePin' method='POST'>
-    
-    <input type='submit' value='保存'>
-</form> -->
+<form id="setMqttForm" class="yuzhi" action='/setMqtt' method='POST'>
+  IP地址: <input type='text' id="mqttServer" name='mqttServer' value=''><br>
+  端口号: <input type='number' id="mqttPort" name='mqttPort' value=''><br>
+  用户名: <input type='text' id="mqttUser" name='mqttUser' value=''><br>
+  密码: <input type='text' id="mqttPassword" name='mqttPassword' value=''><br>
+  主题: <input type='text' id="mqttTopic" name='mqttTopic' value=''><br>
+  客户端ID: <input type='text' id="mqttClientId" name='mqttClientId' value=''><br>
+  <input type='submit' value='保存mqtt'>
+</form>
+<a onclick="showOrhide()">设置参数</a>
 <a href='/wifiConfig'>设置 WiFi</a>
+</div>
+
 </body>
 <script type="text/javascript">
+
+    function changeContrast(){
+      var contrast = document.getElementById('contrast').value;
+      let bodyData  = "contrast=" + contrast;
+      // /setContrast
+      fetch('/setContrast', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: bodyData
+      })
+      .then(response => response.text())
+      .then(data => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      })
+    }
+
+    function showOrhide() {
+      console.log("clicked");
+        var canshu = document.getElementById('canshu');
+        if (canshu.style.display === 'none') {
+            canshu.style.display = 'block';
+            fetchData();
+        } else {
+            canshu.style.display = 'none';
+        }
+    }
+
     async function fetchData() {
         try {
             const response = await fetch('/api/data');
@@ -180,19 +312,17 @@
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
-
-            const wifiStateMap = {
+            const stateMap = {
                 "Connected": "已连接",
                 "Disconnected": "未连接"
             };
-            const wifiStateChinese = wifiStateMap[data.wifiState] || data.wifiState; // 如果未知状态，保持原值
+            const wifiStateChinese = stateMap[data.wifiState] || data.wifiState; // 如果未知状态，保持原值
             document.getElementById('version').textContent = data.version;
-
+            // 设置温度和湿度
             document.getElementById('temperature').textContent = data.temperature;
             document.getElementById('soilMoisture').textContent = data.soilMoisture;
-
-           
-
+            document.getElementById('dht11Temperature').textContent = data.dht11Temperature;
+            document.getElementById('dht11SoilMoisture').textContent = data.dht11SoilMoisture;
             document.getElementById('wifiState').textContent = wifiStateChinese;
             // 设置阈值
             document.getElementById('tempThreshold').value = data.tempThreshold;
@@ -200,7 +330,10 @@
             // 设置引脚值
             document.getElementById('tempPin').value = data.tempPin;
             document.getElementById('soilMoisturePin').value = data.soilMoisturePin;
-
+            document.getElementById('fanPin').value = data.fanPin;
+            document.getElementById('pumpPin').value = data.pumpPin;
+            document.getElementById('lightPin').value = data.lightPin;
+            document.getElementById('dhtPin').value = data.dhtPin;
             // 设置开关状态
             document.getElementById('fanState').checked = data.fanState;
             document.getElementById('pumpState').checked = data.pumpState;
@@ -208,12 +341,58 @@
             document.getElementById('manualMode').checked = data.manualMode;
             document.getElementById('memory').textContent = Math.round((data.totalHeap - data.memory)/data.totalHeap * 100) + '%';  
            // document.getElementById('cpu').textContent = data.cpu;
-            
+           // 设置mqtt
+           document.getElementById('mqttServer').value = data.mqttServer;
+           document.getElementById('mqttUser').value = data.mqttUser;
+           document.getElementById('mqttPassword').value = data.mqttPassword;
+           document.getElementById('mqttTopic').value = data.mqttTopic;
+           document.getElementById('mqttClientId').value = data.mqttClientId;
+           document.getElementById('mqttPort').value = data.mqttPort;
+           document.getElementById('mqttState').textContent = data.mqttState;
+           // 设置对比度
+           document.getElementById('contrast').value = data.contrast;
+
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     }
 
+   
+    // 系统操作
+    function systemOperation(operation) {
+      let bodyData  = "";
+      switch (operation) {
+        case 'reboot':
+          //alert('重启中...');
+          bodyData  =`reboot=${operation}`
+          break;
+        case 'update':
+          //alert('正在检查更新...');
+          bodyData  =`update=${operation}`
+          break;
+        default:
+          //alert('未知操作');
+          break;
+      }
+        fetch("/systemOperation", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: bodyData 
+        })
+            .then(response => response.json()) // 解析响应为 JSON
+            .then(data => {
+                console.log('操作成功:', data);
+                if (data.code === 200) {
+                    // 如果操作成功，更新 UI
+                    fetchData();
+                    alert(data.msg);
+                } else {
+                    alert(data.msg);
+                }
+            })
+    }
     
     function submitForm(form,formId) {
       const payload = new URLSearchParams({
@@ -233,6 +412,10 @@
                 if (data.code === 200) {
                     // 如果操作成功，更新 UI
                     fetchData();
+                    // alert(data.msg);
+                    console.log('操作成功:', data);
+                } else {
+                   // alert(data.msg);
                 }
             })
             .catch(error => {
@@ -266,8 +449,11 @@
             .then(data => {
                 console.log('切换模式成功:', data);
                 if (data.code === 200) {
-                    // 如果切换模式成功，更新 UI
+                    // 如果操作成功，更新 UI
                     fetchData();
+                    alert(data.msg);
+                } else {
+                    alert(data.msg);
                 }
             })
             .catch(error => {
@@ -288,8 +474,11 @@
             .then(data => {
                 console.log('保存阈值成功:', data);
                 if (data.code === 200) {
-                    // 如果保存阈值成功，更新 UI
+                    // 如果操作成功，更新 UI
                     fetchData();
+                    alert(data.msg);
+                } else {
+                    alert(data.msg);
                 }
             })
     });
@@ -306,15 +495,46 @@
             .then(data => {
                 console.log('保存引脚配置成功:', data);
                 if (data.code === 200) {
-                    // 如果保存成功，更新 UI
+                    // 如果操作成功，更新 UI
                     fetchData();
+                    alert(data.msg);
+                } else {
+                    alert(data.msg);
                 }
             })
             .catch(error => {
                 console.error('保存引脚配置失败:', error);
             });
     });
- 
+     
+
+    document.getElementById('setMqttForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        fetch('/setMqtt', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams(new FormData(this)) // 将表单数据转换为查询字符串
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('保存mqtt配置成功:', data);
+                if (data.code === 200) {
+                    // 如果操作成功，更新 UI
+                    fetchData();
+                    alert(data.msg);
+                } else {
+                    alert(data.msg);
+                }
+            })
+            .catch(error => {
+                console.error('保存引脚配置失败:', error);
+            });
+    });
+
+
+
     setInterval(fetchData, 5000);
 
     fetchData();

@@ -25,8 +25,18 @@ extern DallasTemperature sensors;
 extern float temperature;
 extern float soilMoisture;
 
+extern float dht11Temperature;
+extern float dht11SoilMoisture;
+
 float readTemperature();
 float readSoilMoisture();
+float readDHT11Temperature();
+float readDHT11Humidity();
 
 void updateDeviceStates();
+void initPinMode();
+void initSensors();
+void readSensors();
+
+
 #endif
